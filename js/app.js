@@ -2,9 +2,11 @@
 let counter = 0;
 const att = 25;
 
-const leftImg = document.getElementById('leftImg');
-const midImg = document.getElementById('midImg');
-const rightImg = document.getElementById('rightImg');
+
+
+// const leftImg = document.getElementById('leftImg');
+// const midImg = document.getElementById('midImg');
+// const rightImg = document.getElementById('rightImg');
 
 function Busimg(name, path) {
     this.name = name;
@@ -12,10 +14,17 @@ function Busimg(name, path) {
     this.votes = 0;
     this.showen = 0;
     Busimg.gloArr.push(this)
+    Busimg.arrOfNames.push(this.name)
 
 };
 
 Busimg.gloArr = [];
+Busimg.arrOfNames = [];
+Busimg.arrOfVotes = [];
+Busimg.arrOfShowen = [];
+console.log(Busimg.arrOfNames);
+console.log(Busimg.arrOfVotes);
+console.log(Busimg.arrOfShowen);
 // console.log(Busimg.gloArr);
 
 new Busimg('bag', 'css/imgs/bag.jpg');
@@ -50,22 +59,33 @@ function randomNum() {
 let leftIndex;
 let midIndex;
 let rightIndex;
+let imgNumbers = [];
 function renderThreeImg() {
+    console.log('before' + imgNumbers);
     leftIndex = randomNum();
     midIndex = randomNum();
     rightIndex = randomNum();
-    // console.log('before', leftIndex);
-    // console.log('before', midIndex);
-    // console.log('before', rightIndex);
+    if (imgNumbers.includes(midIndex) || imgNumbers.includes(rightIndex) || imgNumbers.includes(leftIndex)) {
+        console.log('inside if includes ' + midIndex + ' ' + rightIndex + ' ' + leftIndex);
+        midIndex = randomNum();
+        leftIndex = randomNum();
+        rightIndex = randomNum();
+        console.log('incudes condition active');
+    };
+
+    imgNumbers = [];
+
+    imgNumbers.push(leftIndex, midIndex, rightIndex)
+    console.log('after' + imgNumbers);
+
     while (leftIndex === midIndex || leftIndex === rightIndex) {
         leftIndex = randomNum()
     }
     while (midIndex === rightIndex || midIndex === leftIndex) {
         midIndex = randomNum()
     }
-    // console.log(leftIndex);
-    // console.log(midIndex);
-    // console.log(rightIndex);
+
+
     leftImg.src = Busimg.gloArr[leftIndex].path;
     Busimg.gloArr[leftIndex].showen++;
     midImg.src = Busimg.gloArr[midIndex].path;
@@ -73,64 +93,121 @@ function renderThreeImg() {
     rightImg.src = Busimg.gloArr[rightIndex].path;
     Busimg.gloArr[rightIndex].showen++;
 
-    // console.log(Busimg.gloArr[rightIndex].showen++);
-    // console.log(Busimg.gloArr[midIndex].showen++);
-    // console.log(Busimg.gloArr[leftIndex].showen++);
-
-    // console.log(Busimg.gloArr);
 
 }
 renderThreeImg()
 
-leftImg.addEventListener('click', handelClick)
-midImg.addEventListener('click', handelClick)
-rightImg.addEventListener('click', handelClick)
 
-let unOrderList = document.getElementById('unOrder');
+let sec = document.getElementById('the-imgs');
+sec.addEventListener('click', handelClick)
+
+let btn = document.createElement('button');
+sec.appendChild(btn);
+
 
 function handelClick(event) {
     event.preventDefault();
     counter++;
     // renderThreeImg();
-    if (counter < 25) {
+
+    if (counter < att) {
         if (event.target.id === 'leftImg') {
 
             Busimg.gloArr[leftIndex].votes++;
             // console.log(Busimg.gloArr);
+            renderThreeImg();
         }
         else if (event.target.id === 'midImg') {
 
             Busimg.gloArr[midIndex].votes++;
+            renderThreeImg();
         }
         else if (event.target.id === 'rightImg') {
 
             Busimg.gloArr[rightIndex].votes++;
+            renderThreeImg();
+        } else {
+            counter--;
+            return
         }
     } else {
-        
-        leftImg.removeEventListener('click', handelClick);
-        midImg.removeEventListener('click', handelClick);
-        rightImg.removeEventListener('click', handelClick);
-        let sec = document.getElementById('result');
-        let btn = document.createElement('button');
-        sec.appendChild(btn);
-        btn.innerHTML = 'result'
-        btn.addEventListener('click',renderList)
+        if (counter = att) {
+        if (event.target.id === 'leftImg') {
 
-        
-        // renderList()
+            Busimg.gloArr[leftIndex].votes++;
+            // console.log(Busimg.gloArr);
+            // renderThreeImg();
+        }
+        else if (event.target.id === 'midImg') {
+
+            Busimg.gloArr[midIndex].votes++;
+            // renderThreeImg();
+        }
+        else if (event.target.id === 'rightImg') {
+
+            Busimg.gloArr[rightIndex].votes++;
+            // renderThreeImg();
+        } else {
+            counter--;
+            return
+        }
+
+        }
+
+
+        sec.removeEventListener('click', handelClick);
+        btn.innerHTML = 'result';
+        btn.addEventListener('click', resultShow);
     }
-    console.log(Busimg.gloArr);
-    renderThreeImg();
+    // console.log(Busimg.gloArr);
+}
+
+function resultShow() {
+    renderList()
+    drwingChart()
+    btn.removeEventListener('click', resultShow)
+
 }
 
 // console.log(Busimg.gloArr);
 
+let unOrderList = document.getElementById('unOrder');
 function renderList() {
     for (let i = 0; i < Busimg.gloArr.length; i++) {
+        Busimg.arrOfShowen.push(Busimg.gloArr[i].showen)
+        Busimg.arrOfVotes.push(Busimg.gloArr[i].votes)
+
         let list = document.createElement('li');
         unOrderList.appendChild(list);
         list.textContent = Busimg.gloArr[i].name + ' had ' + Busimg.gloArr[i].votes + ' votes, and was seen ' + Busimg.gloArr[i].showen + ' times.';
     }
 
+}
+function drwingChart() {
+    let ctx = document.getElementById('myChart')
+    let myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: Busimg.arrOfNames,
+            datasets: [{
+                label: '# of Votes',
+                data: Busimg.arrOfVotes,
+                backgroundColor: [
+                    'black',
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                ],
+                borderWidth: 1
+            },
+            {
+                label: '# of Shown',
+                data: Busimg.arrOfShowen,
+                backgroundColor: [
+                    'gray'
+                ]
+            }
+            ]
+        },
+    })
 }
