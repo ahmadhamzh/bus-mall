@@ -4,28 +4,24 @@ const att = 25;
 
 
 
-// const leftImg = document.getElementById('leftImg');
-// const midImg = document.getElementById('midImg');
-// const rightImg = document.getElementById('rightImg');
 
 function Busimg(name, path) {
     this.name = name;
     this.path = path;
     this.votes = 0;
     this.showen = 0;
+    this.curntShow = 0;
+    this.curntVotes = 0;
     Busimg.gloArr.push(this)
     Busimg.arrOfNames.push(this.name)
 
 };
-
+Busimg.totalGlobalsArr = [];
 Busimg.gloArr = [];
 Busimg.arrOfNames = [];
 Busimg.arrOfVotes = [];
 Busimg.arrOfShowen = [];
-console.log(Busimg.arrOfNames);
-console.log(Busimg.arrOfVotes);
-console.log(Busimg.arrOfShowen);
-// console.log(Busimg.gloArr);
+
 
 new Busimg('bag', 'css/imgs/bag.jpg');
 new Busimg('banana', 'css/imgs/banana.jpg');
@@ -76,7 +72,7 @@ function renderThreeImg() {
     imgNumbers = [];
 
     imgNumbers.push(leftIndex, midIndex, rightIndex)
-    console.log('after' + imgNumbers);
+    // console.log('after' + imgNumbers);
 
     while (leftIndex === midIndex || leftIndex === rightIndex) {
         leftIndex = randomNum()
@@ -88,10 +84,13 @@ function renderThreeImg() {
 
     leftImg.src = Busimg.gloArr[leftIndex].path;
     Busimg.gloArr[leftIndex].showen++;
+    Busimg.gloArr[leftIndex].curntShow++;
     midImg.src = Busimg.gloArr[midIndex].path;
     Busimg.gloArr[midIndex].showen++;
+    Busimg.gloArr[midIndex].curntShow++;
     rightImg.src = Busimg.gloArr[rightIndex].path;
     Busimg.gloArr[rightIndex].showen++;
+    Busimg.gloArr[rightIndex].curntShow++;
 
 
 }
@@ -108,23 +107,26 @@ sec.appendChild(btn);
 function handelClick(event) {
     event.preventDefault();
     counter++;
-    // renderThreeImg();
     
+
     if (counter < att) {
         if (event.target.id === 'leftImg') {
-            
+
             Busimg.gloArr[leftIndex].votes++;
+            Busimg.gloArr[leftIndex].curntVotes++;
             // console.log(Busimg.gloArr);
             renderThreeImg();
         }
         else if (event.target.id === 'midImg') {
 
             Busimg.gloArr[midIndex].votes++;
+            Busimg.gloArr[midIndex].curntVotes++;
             renderThreeImg();
         }
         else if (event.target.id === 'rightImg') {
-            
+
             Busimg.gloArr[rightIndex].votes++;
+            Busimg.gloArr[rightIndex].curntVotes++;
             renderThreeImg();
         } else {
             counter--;
@@ -135,30 +137,33 @@ function handelClick(event) {
             if (event.target.id === 'leftImg') {
 
                 Busimg.gloArr[leftIndex].votes++;
-            // console.log(Busimg.gloArr);
-            // renderThreeImg();
-        }
-        else if (event.target.id === 'midImg') {
-            
-            Busimg.gloArr[midIndex].votes++;
-            // renderThreeImg();
-        }
-        else if (event.target.id === 'rightImg') {
+                Busimg.gloArr[leftIndex].curntVotes++;
+                // console.log(Busimg.gloArr);
+                // renderThreeImg();
+            }
+            else if (event.target.id === 'midImg') {
 
-            Busimg.gloArr[rightIndex].votes++;
-            // renderThreeImg();
-        } else {
-            counter--;
-            return
+                Busimg.gloArr[midIndex].votes++;
+                Busimg.gloArr[midIndex].curntVotes++;
+                // renderThreeImg();
+            }
+            else if (event.target.id === 'rightImg') {
+
+                Busimg.gloArr[rightIndex].votes++;
+                Busimg.gloArr[rightIndex].curntVotes++;
+                // renderThreeImg();
+            } else {
+                counter--;
+                return
+            }
+
         }
 
+
+        sec.removeEventListener('click', handelClick);
+        btn.innerHTML = 'result';
+        btn.addEventListener('click', resultShow);
     }
-    
-    
-    sec.removeEventListener('click', handelClick);
-    btn.innerHTML = 'result';
-    btn.addEventListener('click', resultShow);
-}
     // console.log(Busimg.gloArr);
 }
 
@@ -169,10 +174,10 @@ function resultShow() {
     btnChart.innerHTML = 'Show Chart';
     btnChart.addEventListener('click', chartShow);
     btn.removeEventListener('click', resultShow);
-    
+
 }
 
-function chartShow(){
+function chartShow() {
     drwingChart()
 }
 
@@ -186,8 +191,10 @@ function renderList() {
 
         let list = document.createElement('li');
         unOrderList.appendChild(list);
-        list.textContent = Busimg.gloArr[i].name + ' had ' + Busimg.gloArr[i].votes + ' votes, and was seen ' + Busimg.gloArr[i].showen + ' times.';
+        list.textContent = Busimg.gloArr[i].name + ' had ' + Busimg.gloArr[i].curntVotes + ' votes, and was seen ' + Busimg.gloArr[i].curntShow + ' times. /' + ' and the total showen is ' + Busimg.gloArr[i].showen + ' and the total votes is ' + Busimg.gloArr[i].votes;
+        
     }
+    setDataToLs();
 
 }
 function drwingChart() {
@@ -218,6 +225,43 @@ function drwingChart() {
         },
     })
 }
-console.log(Busimg.arrOfShowen);
-console.log(Busimg.arrOfVotes);
+
+
+
+function setDataToLs() {
+    let convertedData = JSON.stringify(Busimg.gloArr);
+    localStorage.setItem('newGlobalArr', convertedData);
+    // console.log(convertedData);    
+}
+
+// let newGlobalArr
+function getDataFromLs() {
+    let storedDataString = localStorage.getItem('newGlobalArr');
+    // console.log(storedData);
+    let dataToParse = JSON.parse(storedDataString);
+    // console.log(dataToParse);
+
+    if (dataToParse) {
+        console.log(dataToParse);
+        console.log('ahmad');
+        for (let i = 0; i < dataToParse.length; i++) {
+            
+            
+            Busimg.gloArr[i].showen += dataToParse[i].showen;
+            Busimg.gloArr[i].votes += dataToParse[i].votes;
+
+        }
+
+    } else {
+
+
+    }
+
+    // console.log(Busimg.totalGlobalsArr);
+}
+getDataFromLs();
+// console.log('curent arr');
+// console.log(Busimg.gloArr);
+// console.log('total array');
+// console.log(Busimg.totalGlobalsArr);
 
