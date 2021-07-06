@@ -61,16 +61,16 @@ let midIndex;
 let rightIndex;
 let imgNumbers = [];
 function renderThreeImg() {
-    console.log('before' + imgNumbers);
+    // console.log('before' + imgNumbers);
     leftIndex = randomNum();
     midIndex = randomNum();
     rightIndex = randomNum();
-    if (imgNumbers.includes(midIndex) || imgNumbers.includes(rightIndex) || imgNumbers.includes(leftIndex)) {
-        console.log('inside if includes ' + midIndex + ' ' + rightIndex + ' ' + leftIndex);
+    while (imgNumbers.includes(midIndex) || imgNumbers.includes(rightIndex) || imgNumbers.includes(leftIndex)) {
+        // console.log('inside if includes ' + midIndex + ' ' + rightIndex + ' ' + leftIndex);
         midIndex = randomNum();
         leftIndex = randomNum();
         rightIndex = randomNum();
-        console.log('incudes condition active');
+        // console.log('incudes condition active');
     };
 
     imgNumbers = [];
@@ -218,3 +218,6 @@ function drwingChart() {
         },
     })
 }
+console.log(Busimg.arrOfShowen);
+console.log(Busimg.arrOfVotes);
+
