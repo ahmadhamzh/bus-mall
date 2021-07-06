@@ -109,10 +109,10 @@ function handelClick(event) {
     event.preventDefault();
     counter++;
     // renderThreeImg();
-
+    
     if (counter < att) {
         if (event.target.id === 'leftImg') {
-
+            
             Busimg.gloArr[leftIndex].votes++;
             // console.log(Busimg.gloArr);
             renderThreeImg();
@@ -123,7 +123,7 @@ function handelClick(event) {
             renderThreeImg();
         }
         else if (event.target.id === 'rightImg') {
-
+            
             Busimg.gloArr[rightIndex].votes++;
             renderThreeImg();
         } else {
@@ -132,14 +132,14 @@ function handelClick(event) {
         }
     } else {
         if (counter = att) {
-        if (event.target.id === 'leftImg') {
+            if (event.target.id === 'leftImg') {
 
-            Busimg.gloArr[leftIndex].votes++;
+                Busimg.gloArr[leftIndex].votes++;
             // console.log(Busimg.gloArr);
             // renderThreeImg();
         }
         else if (event.target.id === 'midImg') {
-
+            
             Busimg.gloArr[midIndex].votes++;
             // renderThreeImg();
         }
@@ -152,21 +152,28 @@ function handelClick(event) {
             return
         }
 
-        }
-
-
-        sec.removeEventListener('click', handelClick);
-        btn.innerHTML = 'result';
-        btn.addEventListener('click', resultShow);
     }
+    
+    
+    sec.removeEventListener('click', handelClick);
+    btn.innerHTML = 'result';
+    btn.addEventListener('click', resultShow);
+}
     // console.log(Busimg.gloArr);
 }
 
 function resultShow() {
     renderList()
-    drwingChart()
-    btn.removeEventListener('click', resultShow)
+    let btnChart = document.createElement('button');
+    sec.appendChild(btnChart);
+    btnChart.innerHTML = 'Show Chart';
+    btnChart.addEventListener('click', chartShow);
+    btn.removeEventListener('click', resultShow);
+    
+}
 
+function chartShow(){
+    drwingChart()
 }
 
 // console.log(Busimg.gloArr);

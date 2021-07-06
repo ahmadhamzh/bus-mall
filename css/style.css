@@ -3,6 +3,9 @@ header h1 {
     text-align: center;
     margin: 50px;
 }
+main {
+    background-color: #f3f3f3e0;
+}
 main h2 {
     font-size: 25pt;
     padding: 10px;
