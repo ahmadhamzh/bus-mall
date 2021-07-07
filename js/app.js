@@ -191,7 +191,7 @@ function renderList() {
 
         let list = document.createElement('li');
         unOrderList.appendChild(list);
-        list.textContent = Busimg.gloArr[i].name + ' had ' + Busimg.gloArr[i].curntVotes + ' votes, and was seen ' + Busimg.gloArr[i].curntShow + ' times. /' + ' and the total showen is ' + Busimg.gloArr[i].showen + ' and the total votes is ' + Busimg.gloArr[i].votes;
+        list.textContent = '- ' +Busimg.gloArr[i].name + ' had ' + Busimg.gloArr[i].curntVotes + ' votes, and was seen ' + Busimg.gloArr[i].curntShow + ' times. /' + ' and the total showen is ' + Busimg.gloArr[i].showen + ' and the total votes is ' + Busimg.gloArr[i].votes;
         
     }
     setDataToLs();
